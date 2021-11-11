@@ -74,7 +74,7 @@ def open_file():
     calculate_scale_factor(max_distance)
 
 def handle_events(events, menu):
-    global alive
+    global alive #
     for event in events:
         menu.react(event)
         if event.type == pg.QUIT:
