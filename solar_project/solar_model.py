@@ -1,5 +1,9 @@
 # coding: utf-8
 # license: GPLv3
+import math
+import time
+
+from solar_project.solar_main import time_scale
 
 gravitational_constant = 6.67408E-11
 """Гравитационная постоянная Ньютона G"""
@@ -19,10 +23,10 @@ def calculate_force(body, space_objects):
     for obj in space_objects:
         if body == obj:
             continue  # тело не действует гравитационной силой на само себя!
-        r = ((body.x - obj.x)**2 + (body.y - obj.y)**2)**0.5
-        r = max(r, body.R + obj.R) # обработка аномалий при прохождении одного тела сквозь другое
-        body.Fx += -gravitational_constant*obj.m*body.m*(body.x - obj.x)/r**3
-        body.Fy += -gravitational_constant*obj.m*body.m*(body.y - obj.y)/r**3
+        r = ((body.x - obj.x) ** 2 + (body.y - obj.y) ** 2) ** 0.5
+        r = max(r, body.R + obj.R)  # обработка аномалий при прохождении одного тела сквозь другое
+        body.Fx += -gravitational_constant * obj.m * body.m * (body.x - obj.x) / r ** 3
+        body.Fy += -gravitational_constant * obj.m * body.m * (body.y - obj.y) / r ** 3
 
 
 def move_space_object(body, dt):
@@ -32,12 +36,18 @@ def move_space_object(body, dt):
 
     **body** — тело, которое нужно переместить.
     """
-    ax = body.Fx/body.m
-    body.x += body.Vx*dt
-    body.Vx += ax*dt
-    ay = body.Fy/body.m
-    body.y += body.Vy*dt
-    body.Vy += ay*dt
+    ax = body.Fx / body.m
+    body.x += body.Vx * dt
+    body.Vx += ax * dt
+    ay = body.Fy / body.m
+    body.y += body.Vy * dt
+    body.Vy += ay * dt
+
+
+def data(body):
+    distance = math.sqrt(body.x ** 2 + body.y ** 2)
+    speed = math.sqrt(body.Vx ** 2 + body.Vy ** 2)
+    t = time.perf_counter() * time_scale
 
 
 def recalculate_space_objects_positions(space_objects, dt):
